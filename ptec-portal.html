@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PTEC EduTech Portal — Lecturer Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ptec-red: #C0392B;
+    --ptec-red-dark: #96281B;
+    --ptec-red-light: #F9EBEA;
+    --ptec-gold: #D4A017;
+    --ptec-gold-light: #FDF6E3;
+    --surface: #FAFAF8;
+    --surface-2: #F2F1EE;
+    --border: #E5E3DC;
+    --text-primary: #1A1A18;
+    --text-secondary: #5C5B56;
+    --text-muted: #9B9A94;
+    --white: #FFFFFF;
+    --sidebar-w: 240px;
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--surface);
+    color: var(--text-primary);
+    display: flex;
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: var(--ptec-red-dark);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+  }
+
+  .sidebar-brand {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .brand-badge {
+    display: inline-block;
+    background: var(--ptec-gold);
+    color: #1A1A18;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .brand-name {
+    font-family: 'DM Serif Display', serif;
+    color: #fff;
+    font-size: 18px;
+    line-height: 1.25;
+  }
+
+  .brand-sub {
+    color: rgba(255,255,255,0.55);
+    font-size: 11px;
+    margin-top: 3px;
+    letter-spacing: 0.02em;
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    padding: 16px 12px;
+    overflow-y: auto;
+  }
+
+  .nav-section-label {
+    color: rgba(255,255,255,0.35);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 8px 6px;
+    margin-top: 8px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: 7px;
+    color: rgba(255,255,255,0.7);
+    font-size: 13px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 2px;
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+  }
+
+  .nav-item:hover { background: rgba(255,255,255,0.08); color: #fff; }
+
+  .nav-item.active {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .nav-icon {
+    width: 16px;
+    height: 16px;
+    opacity: 0.8;
+    flex-shrink: 0;
+  }
+
+  .nav-badge {
+    margin-left: auto;
+    background: var(--ptec-gold);
+    color: #1A1A18;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 1px 6px;
+    border-radius: 99px;
+  }
+
+  .sidebar-footer {
+    padding: 16px 12px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .user-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .user-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--ptec-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: #1A1A18;
+    flex-shrink: 0;
+  }
+
+  .user-name { color: #fff; font-size: 13px; font-weight: 500; }
+  .user-role { color: rgba(255,255,255,0.45); font-size: 11px; }
+
+  /* ── Main ── */
+  .main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .topbar {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 28px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .topbar-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: var(--text-primary);
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .topbar-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 6px 12px;
+    font-size: 13px;
+    color: var(--text-muted);
+    width: 200px;
+    cursor: text;
+  }
+
+  .notif-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    color: var(--text-secondary);
+  }
+
+  .notif-dot {
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 7px; height: 7px;
+    background: var(--ptec-red);
+    border-radius: 50%;
+    border: 2px solid #fff;
+  }
+
+  /* ── Content ── */
+  .content {
+    padding: 28px;
+    flex: 1;
+  }
+
+  .page { display: none; animation: fadeIn 0.2s ease; }
+  .page.active { display: block; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* ── Stats grid ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--ptec-red);
+  }
+
+  .stat-card.gold::before { background: var(--ptec-gold); }
+  .stat-card.teal::before { background: #1A7A6E; }
+  .stat-card.navy::before { background: #2C4A8C; }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 30px;
+    color: var(--text-primary);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .stat-delta {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 11px;
+    color: #1A7A6E;
+    font-weight: 500;
+  }
+
+  /* ── Two col layout ── */
+  .two-col { display: grid; grid-template-columns: 1fr 380px; gap: 16px; }
+
+  /* ── Section card ── */
+  .section-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .section-head {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .section-head h3 {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .section-head span {
+    font-size: 12px;
+    color: var(--ptec-red);
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+  /* ── Table ── */
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table th {
+    padding: 10px 20px;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: left;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .data-table td {
+    padding: 12px 20px;
+    font-size: 13px;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border);
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: var(--surface); }
+
+  /* ── Status pill ── */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .pill-green { background: #E8F5E9; color: #2E7D32; }
+  .pill-amber { background: #FFF8E1; color: #F57F17; }
+  .pill-red   { background: var(--ptec-red-light); color: var(--ptec-red); }
+  .pill-gray  { background: var(--surface-2); color: var(--text-muted); }
+  .pill-blue  { background: #E3F2FD; color: #1565C0; }
+
+  /* ── Activity list ── */
+  .activity-list { padding: 8px 0; }
+  .activity-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .activity-item:last-child { border-bottom: none; }
+  .activity-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+  .activity-text { font-size: 13px; color: var(--text-primary); line-height: 1.5; }
+  .activity-time { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  /* ── Course cards ── */
+  .course-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .course-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer;
+    transition: box-shadow 0.15s, transform 0.15s;
+  }
+
+  .course-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+  }
+
+  .course-banner {
+    height: 6px;
+  }
+
+  .course-body { padding: 16px; }
+
+  .course-code {
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .course-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    line-height: 1.35;
+  }
+
+  .course-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .course-progress-bar {
+    height: 3px;
+    background: var(--surface-2);
+    border-radius: 2px;
+    margin-top: 10px;
+    overflow: hidden;
+  }
+
+  .course-progress-fill {
+    height: 100%;
+    background: var(--ptec-red);
+    border-radius: 2px;
+  }
+
+  /* ── Research submissions ── */
+  .research-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  .research-item:hover { background: var(--surface); }
+  .research-item:last-child { border-bottom: none; }
+
+  .research-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: var(--ptec-red-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .research-title { font-size: 13px; font-weight: 500; color: var(--text-primary); margin-bottom: 2px; }
+  .research-meta { font-size: 11px; color: var(--text-muted); }
+
+  /* ── Btn ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+  }
+
+  .btn-primary {
+    background: var(--ptec-red);
+    color: #fff;
+  }
+
+  .btn-primary:hover { background: var(--ptec-red-dark); }
+
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+
+  .btn-outline:hover { background: var(--surface-2); }
+
+  .page-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .page-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--text-primary);
+  }
+
+  .page-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* ── Welcome banner ── */
+  .welcome-banner {
+    background: linear-gradient(135deg, var(--ptec-red-dark) 0%, var(--ptec-red) 100%);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    color: #fff;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .welcome-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+
+  .welcome-sub { font-size: 13px; opacity: 0.75; }
+
+  .welcome-date {
+    text-align: right;
+    opacity: 0.7;
+    font-size: 12px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-badge">Research Preview</div>
+    <div class="brand-name">PTEC EduTech</div>
+    <div class="brand-sub">Lecturer Portal</div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+    <button class="nav-item active" onclick="showPage('dashboard', this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/>
+        <rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/>
+      </svg>
+      Dashboard
+    </button>
+    <button class="nav-item" onclick="showPage('courses', this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M2 4h12M2 8h8M2 12h10"/>
+      </svg>
+      Course Materials
+    </button>
+    <button class="nav-item" onclick="showPage('grades', this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="2" y="1" width="12" height="14" rx="2"/>
+        <path d="M5 5h6M5 8h4M5 11h5"/>
+      </svg>
+      Assignments & Grades
+      <span class="nav-badge">5</span>
+    </button>
+    <button class="nav-item" onclick="showPage('research', this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/>
+      </svg>
+      Action Research
+      <span class="nav-badge">3</span>
+    </button>
+
+    <div class="nav-section-label">Admin</div>
+    <button class="nav-item" onclick="showPage('register', this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M8 1v14M1 8h14"/>
+      </svg>
+      Course Registration
+    </button>
+    <button class="nav-item" onclick="showPage('dashboard', this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="6" cy="5" r="3"/><path d="M1 14c0-3 2-5 5-5h4c3 0 5 2 5 5"/>
+      </svg>
+      Students
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="user-avatar">TP</div>
+      <div>
+        <div class="user-name">Phirun Tep</div>
+        <div class="user-role">Lecturer · PTEC</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- Main -->
+<div class="main">
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar-title" id="topbar-title">Dashboard</div>
+    <div class="topbar-right">
+      <div class="topbar-search">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/>
+        </svg>
+        Search...
+      </div>
+      <div class="notif-btn">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M8 1a5 5 0 015 5v3l1.5 2H1.5L3 9V6a5 5 0 015-5zM6 13a2 2 0 004 0"/>
+        </svg>
+        <div class="notif-dot"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="welcome-banner">
+        <div>
+          <div class="welcome-title">Good morning, Phirun!</div>
+          <div class="welcome-sub">You have 3 action research submissions pending review and 5 assignments to grade.</div>
+        </div>
+        <div class="welcome-date">
+          Tuesday<br>April 28, 2026<br>Semester 2
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Students</div>
+          <div class="stat-value">124</div>
+          <div class="stat-sub"><span class="stat-delta">↑ 12</span> from last semester</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-label">Active Courses</div>
+          <div class="stat-value">6</div>
+          <div class="stat-sub">2 universities · 4 subjects</div>
+        </div>
+        <div class="stat-card teal">
+          <div class="stat-label">Pending Reviews</div>
+          <div class="stat-value">8</div>
+          <div class="stat-sub">3 research · 5 assignments</div>
+        </div>
+        <div class="stat-card navy">
+          <div class="stat-label">Avg. Grade</div>
+          <div class="stat-value">B+</div>
+          <div class="stat-sub">Across all active courses</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="section-card">
+          <div class="section-head">
+            <h3>Recent Submissions</h3>
+            <span onclick="showPage('grades', document.querySelector('.nav-item:nth-child(4)'))">View all</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Course</th>
+                <th>Type</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Prom Minea</td>
+                <td>ENG216</td>
+                <td>Assignment 3</td>
+                <td><span class="pill pill-amber">Pending</span></td>
+              </tr>
+              <tr>
+                <td>Sokha Chann</td>
+                <td>TESOL 101</td>
+                <td>Action Research</td>
+                <td><span class="pill pill-amber">Pending</span></td>
+              </tr>
+              <tr>
+                <td>Dara Pich</td>
+                <td>Grammar 3</td>
+                <td>Quiz 4</td>
+                <td><span class="pill pill-green">Graded</span></td>
+              </tr>
+              <tr>
+                <td>Leakhena Ros</td>
+                <td>ENG216</td>
+                <td>Final Project</td>
+                <td><span class="pill pill-green">Graded</span></td>
+              </tr>
+              <tr>
+                <td>Visal Noun</td>
+                <td>TESOL 101</td>
+                <td>Lesson Plan</td>
+                <td><span class="pill pill-red">Late</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="section-card">
+          <div class="section-head">
+            <h3>Recent Activity</h3>
+            <span>Clear</span>
+          </div>
+          <div class="activity-list">
+            <div class="activity-item">
+              <div class="activity-dot" style="background:#C0392B"></div>
+              <div>
+                <div class="activity-text">Prom Minea submitted Action Research draft</div>
+                <div class="activity-time">Today · 09:14 AM</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:#D4A017"></div>
+              <div>
+                <div class="activity-text">Course material updated — Grammar in Context 3</div>
+                <div class="activity-time">Today · 08:30 AM</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:#1A7A6E"></div>
+              <div>
+                <div class="activity-text">Dara Pich graded — Quiz 4 · Score: 88/100</div>
+                <div class="activity-time">Yesterday · 04:45 PM</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:#2C4A8C"></div>
+              <div>
+                <div class="activity-text">3 students registered for TESOL Certificate</div>
+                <div class="activity-time">Yesterday · 02:10 PM</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:#9B9A94"></div>
+              <div>
+                <div class="activity-text">Semester 2 schedule published</div>
+                <div class="activity-time">Apr 25 · 10:00 AM</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COURSES -->
+    <div class="page" id="page-courses">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Course Materials</div>
+          <div class="page-sub">Manage and upload materials for your active courses</div>
+        </div>
+        <button class="btn btn-primary">+ Upload Material</button>
+      </div>
+      <div class="course-grid">
+        <div class="course-card">
+          <div class="course-banner" style="background:#C0392B"></div>
+          <div class="course-body">
+            <div class="course-code">ENG216 · UC</div>
+            <div class="course-title">Technical Writing for Business</div>
+            <div class="course-meta"><span>32 students</span><span class="pill pill-green">Active</span></div>
+            <div class="course-progress-bar"><div class="course-progress-fill" style="width:65%"></div></div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:5px">Week 9 of 14 · 12 materials uploaded</div>
+          </div>
+        </div>
+        <div class="course-card">
+          <div class="course-banner" style="background:#D4A017"></div>
+          <div class="course-body">
+            <div class="course-code">TESOL 101 · PTEC</div>
+            <div class="course-title">Foundations of English Language Teaching</div>
+            <div class="course-meta"><span>28 students</span><span class="pill pill-green">Active</span></div>
+            <div class="course-progress-bar"><div class="course-progress-fill" style="width:50%;background:#D4A017"></div></div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:5px">Week 7 of 14 · 9 materials uploaded</div>
+          </div>
+        </div>
+        <div class="course-card">
+          <div class="course-banner" style="background:#1A7A6E"></div>
+          <div class="course-body">
+            <div class="course-code">GIC3 · PTEC</div>
+            <div class="course-title">Grammar in Context 3</div>
+            <div class="course-meta"><span>40 students</span><span class="pill pill-green">Active</span></div>
+            <div class="course-progress-bar"><div class="course-progress-fill" style="width:75%;background:#1A7A6E"></div></div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:5px">Week 11 of 14 · 15 materials uploaded</div>
+          </div>
+        </div>
+        <div class="course-card">
+          <div class="course-banner" style="background:#2C4A8C"></div>
+          <div class="course-body">
+            <div class="course-code">SWW · PTEC</div>
+            <div class="course-title">Successful Writing at Work</div>
+            <div class="course-meta"><span>24 students</span><span class="pill pill-amber">In Progress</span></div>
+            <div class="course-progress-bar"><div class="course-progress-fill" style="width:40%;background:#2C4A8C"></div></div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:5px">Week 6 of 14 · 7 materials uploaded</div>
+          </div>
+        </div>
+        <div class="course-card">
+          <div class="course-banner" style="background:#6D3B8E"></div>
+          <div class="course-body">
+            <div class="course-code">TESOL-YL · PTEC</div>
+            <div class="course-title">TESOL Certificate — Young Learners</div>
+            <div class="course-meta"><span>18 students</span><span class="pill pill-blue">Planning</span></div>
+            <div class="course-progress-bar"><div class="course-progress-fill" style="width:15%;background:#6D3B8E"></div></div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:5px">Week 2 of 14 · 3 materials uploaded</div>
+          </div>
+        </div>
+        <div class="course-card" style="border-style:dashed;display:flex;align-items:center;justify-content:center;min-height:140px;cursor:pointer;">
+          <div style="text-align:center;color:var(--text-muted)">
+            <div style="font-size:22px;margin-bottom:6px">+</div>
+            <div style="font-size:13px">Add New Course</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRADES -->
+    <div class="page" id="page-grades">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Assignments & Grades</div>
+          <div class="page-sub">5 submissions awaiting your review</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline">Export</button>
+          <button class="btn btn-primary">+ New Assignment</button>
+        </div>
+      </div>
+      <div class="section-card">
+        <div class="section-head">
+          <h3>All Submissions</h3>
+          <span>Filter</span>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Course</th>
+              <th>Assignment</th>
+              <th>Submitted</th>
+              <th>Score</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Prom Minea</td>
+              <td>ENG216</td>
+              <td>Assignment 3 — Report Writing</td>
+              <td>Apr 27</td>
+              <td>—</td>
+              <td><span class="pill pill-amber">Pending</span></td>
+            </tr>
+            <tr>
+              <td>Sokha Chann</td>
+              <td>TESOL 101</td>
+              <td>Lesson Plan Draft</td>
+              <td>Apr 27</td>
+              <td>—</td>
+              <td><span class="pill pill-amber">Pending</span></td>
+            </tr>
+            <tr>
+              <td>Visal Noun</td>
+              <td>TESOL 101</td>
+              <td>Reflection Journal 2</td>
+              <td>Apr 26</td>
+              <td>—</td>
+              <td><span class="pill pill-red">Late</span></td>
+            </tr>
+            <tr>
+              <td>Dara Pich</td>
+              <td>GIC3</td>
+              <td>Quiz 4 — Modal Verbs</td>
+              <td>Apr 25</td>
+              <td>88/100</td>
+              <td><span class="pill pill-green">Graded</span></td>
+            </tr>
+            <tr>
+              <td>Leakhena Ros</td>
+              <td>ENG216</td>
+              <td>Final Business Report</td>
+              <td>Apr 24</td>
+              <td>91/100</td>
+              <td><span class="pill pill-green">Graded</span></td>
+            </tr>
+            <tr>
+              <td>Channary Lim</td>
+              <td>SWW</td>
+              <td>Cover Letter Workshop</td>
+              <td>Apr 23</td>
+              <td>76/100</td>
+              <td><span class="pill pill-green">Graded</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RESEARCH -->
+    <div class="page" id="page-research">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Action Research</div>
+          <div class="page-sub">Supervise and review pre-service teacher research submissions</div>
+        </div>
+        <button class="btn btn-primary">+ New Submission</button>
+      </div>
+      <div class="two-col">
+        <div class="section-card">
+          <div class="section-head">
+            <h3>Submissions</h3>
+            <span>3 pending</span>
+          </div>
+          <div>
+            <div class="research-item">
+              <div class="research-icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#C0392B" stroke-width="1.5">
+                  <rect x="2" y="1" width="12" height="14" rx="2"/>
+                  <path d="M5 5h6M5 8h4M5 11h5"/>
+                </svg>
+              </div>
+              <div style="flex:1">
+                <div class="research-title">Using Flashcards to Improve Grade 3 Writing Skills</div>
+                <div class="research-meta">Prom Minea · PTEC · Submitted Apr 27</div>
+              </div>
+              <span class="pill pill-amber">Pending</span>
+            </div>
+            <div class="research-item">
+              <div class="research-icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#C0392B" stroke-width="1.5">
+                  <rect x="2" y="1" width="12" height="14" rx="2"/>
+                  <path d="M5 5h6M5 8h4M5 11h5"/>
+                </svg>
+              </div>
+              <div style="flex:1">
+                <div class="research-title">Cooperative Learning Strategies in EFL Classrooms</div>
+                <div class="research-meta">Sokha Chann · PTEC · Submitted Apr 26</div>
+              </div>
+              <span class="pill pill-amber">Pending</span>
+            </div>
+            <div class="research-item">
+              <div class="research-icon">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#C0392B" stroke-width="1.5">
+                  <rect x="2" y="1" width="12" height="14" rx="2"/>
+                  <path d="M5 5h6M5 8h4M5 11h5"/>
+                </svg>
+              </div>
+              <div style="flex:1">
+                <div class="research-title">ICT Integration in Primary English Lessons</div>
+                <div class="research-meta">Visal Noun · PTEC · Submitted Apr 24</div>
+              </div>
+              <span class="pill pill-amber">Pending</span>
+            </div>
+            <div class="research-item">
+              <div class="research-icon" style="background:#E8F5E9">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#2E7D32" stroke-width="1.5">
+                  <rect x="2" y="1" width="12" height="14" rx="2"/>
+                  <path d="M5 5h6M5 8h4M5 11h5"/>
+                </svg>
+              </div>
+              <div style="flex:1">
+                <div class="research-title">5E Model for Reading Comprehension — Grade 5</div>
+                <div class="research-meta">Dara Pich · PTEC · Submitted Apr 20</div>
+              </div>
+              <span class="pill pill-green">Reviewed</span>
+            </div>
+            <div class="research-item">
+              <div class="research-icon" style="background:#E8F5E9">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#2E7D32" stroke-width="1.5">
+                  <rect x="2" y="1" width="12" height="14" rx="2"/>
+                  <path d="M5 5h6M5 8h4M5 11h5"/>
+                </svg>
+              </div>
+              <div style="flex:1">
+                <div class="research-title">STAD Cooperative Learning — Quasi-Experimental Study</div>
+                <div class="research-meta">Leakhena Ros · PTEC · Submitted Apr 18</div>
+              </div>
+              <span class="pill pill-green">Reviewed</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="section-card">
+            <div class="section-head"><h3>Research by Stage</h3></div>
+            <div style="padding:16px">
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:6px"><span>Proposal</span><span>4</span></div>
+              <div class="course-progress-bar" style="margin-bottom:12px"><div class="course-progress-fill" style="width:80%"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:6px"><span>Data Collection</span><span>3</span></div>
+              <div class="course-progress-bar" style="margin-bottom:12px"><div class="course-progress-fill" style="width:60%;background:#D4A017"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:6px"><span>Analysis</span><span>2</span></div>
+              <div class="course-progress-bar" style="margin-bottom:12px"><div class="course-progress-fill" style="width:40%;background:#1A7A6E"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:6px"><span>Final Report</span><span>5</span></div>
+              <div class="course-progress-bar"><div class="course-progress-fill" style="width:100%"></div></div>
+            </div>
+          </div>
+          <div class="section-card">
+            <div class="section-head"><h3>Quick Actions</h3></div>
+            <div style="padding:12px;display:flex;flex-direction:column;gap:8px">
+              <button class="btn btn-primary" style="width:100%;justify-content:center">Review Next Pending</button>
+              <button class="btn btn-outline" style="width:100%;justify-content:center">Download All Reports</button>
+              <button class="btn btn-outline" style="width:100%;justify-content:center">Send Feedback</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="page" id="page-register">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Course Registration</div>
+          <div class="page-sub">Manage student enrollment for Semester 2, 2026</div>
+        </div>
+        <button class="btn btn-primary">+ Register Student</button>
+      </div>
+      <div class="section-card">
+        <div class="section-head">
+          <h3>Enrolled Students</h3>
+          <span>Export list</span>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Student Name</th>
+              <th>Student ID</th>
+              <th>Course</th>
+              <th>Institution</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Prom Minea</td>
+              <td>PTEC-2024-081</td>
+              <td>TESOL 101</td>
+              <td>PTEC</td>
+              <td><span class="pill pill-green">Enrolled</span></td>
+            </tr>
+            <tr>
+              <td>Sokha Chann</td>
+              <td>PTEC-2024-044</td>
+              <td>GIC3</td>
+              <td>PTEC</td>
+              <td><span class="pill pill-green">Enrolled</span></td>
+            </tr>
+            <tr>
+              <td>Dara Pich</td>
+              <td>PTEC-2024-022</td>
+              <td>TESOL-YL</td>
+              <td>PTEC</td>
+              <td><span class="pill pill-green">Enrolled</span></td>
+            </tr>
+            <tr>
+              <td>Leakhena Ros</td>
+              <td>UC-2024-119</td>
+              <td>ENG216</td>
+              <td>Univ. of Cambodia</td>
+              <td><span class="pill pill-green">Enrolled</span></td>
+            </tr>
+            <tr>
+              <td>Visal Noun</td>
+              <td>PTEC-2024-067</td>
+              <td>SWW</td>
+              <td>PTEC</td>
+              <td><span class="pill pill-amber">Pending</span></td>
+            </tr>
+            <tr>
+              <td>Channary Lim</td>
+              <td>UC-2024-088</td>
+              <td>ENG216</td>
+              <td>Univ. of Cambodia</td>
+              <td><span class="pill pill-green">Enrolled</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  const titles = {
+    dashboard: 'Dashboard',
+    courses: 'Course Materials',
+    grades: 'Assignments & Grades',
+    research: 'Action Research',
+    register: 'Course Registration'
+  };
+  document.getElementById('topbar-title').textContent = titles[id] || id;
+}
+</script>
+</body>
+</html>
